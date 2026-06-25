@@ -162,6 +162,7 @@ export default function DashboardPage() {
             onSelectSatellite={handleSelectSatellite}
             layers={layers}
             onToggleLayer={handleToggleLayer}
+            autoRotate={false}
           />
         </section>
 

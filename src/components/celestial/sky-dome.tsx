@@ -229,11 +229,18 @@ export function ObjectBrowser({
 export function SkyDomeVisualizer({
   mode,
   onSelectObject,
+  satellites = [],
 }: {
   mode: "earth" | "sky" | "universe";
   onSelectObject: (obj: CelestialObject) => void;
+  satellites?: any[];
 }) {
   const [hoveredConst, setHoveredConst] = useState<string | null>(null);
+  const [showSatellites, setShowSatellites] = useState(true);
+
+  const displaySatellites = satellites && satellites.length > 0 ? satellites : [
+    { id: "iss", name: "ISS Tracker", status: "nominal", altitude: 408, velocity: 7.66, inclination: 51.6, latitude: 15, longitude: 80, signalStrength: 100 }
+  ];
 
   return (
     <div className="w-full h-full min-h-[420px] flex items-center justify-center relative rounded-2xl overflow-hidden border border-white/5 bg-bg-surface/30">
@@ -242,28 +249,52 @@ export function SkyDomeVisualizer({
       {mode === "earth" && (
         <div className="relative flex flex-col items-center justify-center font-mono w-full max-w-lg">
           <span className="absolute top-4 left-4 text-[9px] text-text-secondary z-20">EARTH ORBITAL PATH OVERLAY</span>
+          
+          <div className="absolute top-4 right-4 z-30 flex items-center bg-white/5 border border-white/10 p-0.5 rounded-lg">
+            <button
+              onClick={() => setShowSatellites(true)}
+              className={`px-2.5 py-1 text-[8px] font-mono rounded cursor-pointer transition-colors ${
+                showSatellites
+                  ? "bg-primary text-white"
+                  : "bg-transparent text-text-secondary hover:text-white"
+              }`}
+            >
+              WITH SATELLITES
+            </button>
+            <button
+              onClick={() => setShowSatellites(false)}
+              className={`px-2.5 py-1 text-[8px] font-mono rounded cursor-pointer transition-colors ${
+                !showSatellites
+                  ? "bg-primary text-white"
+                  : "bg-transparent text-text-secondary hover:text-white"
+              }`}
+            >
+              WITHOUT SATELLITES
+            </button>
+          </div>
+
           <EarthGlobe
-            satellites={[
-              { id: "iss", name: "ISS Tracker", status: "nominal", altitude: 408, velocity: 7.66, inclination: 51.6, latitude: 15, longitude: 80, signalStrength: 100 }
-            ]}
+            satellites={showSatellites ? displaySatellites : []}
             layers={{
-              satellites: true,
+              satellites: showSatellites,
               debris: false,
-              orbits: true,
+              orbits: showSatellites,
               disasters: false,
               assets: false
             }}
-            onSelectSatellite={() => onSelectObject({
-              id: "iss",
-              name: "ISS Tracker",
-              category: "iss",
-              classification: "Space Station",
-              distance: "408 KM",
-              magnitude: "-5.0",
-              discovery: "1998",
-              description: "The International Space Station is a co-operative space laboratory orbiting Earth.",
-              crew: ["S. Williams", "B. Wilmore", "M. Barratt", "M. Dominick", "J. Epps", "A. Grebenkin", "N. Kononenko"],
-              experiment: "Microgravity plant biology and fluid dynamics sync.",
+            onSelectSatellite={(sat) => onSelectObject({
+              id: sat.id,
+              name: sat.name,
+              category: sat.id === "iss" ? "iss" : "planet",
+              classification: sat.id === "iss" ? "Space Station" : "Artificial Satellite",
+              distance: `${sat.altitude} KM`,
+              magnitude: "N/A",
+              discovery: sat.id === "iss" ? "1998" : "Modern",
+              description: sat.id === "iss" 
+                ? "The International Space Station is a co-operative space laboratory orbiting Earth."
+                : `ZENITH monitoring node. Orbiting at altitude ${sat.altitude} km with a velocity of ${sat.velocity} km/s. Status: ${sat.status.toUpperCase()}.`,
+              crew: sat.id === "iss" ? ["S. Williams", "B. Wilmore", "M. Barratt", "M. Dominick", "J. Epps", "A. Grebenkin", "N. Kononenko"] : undefined,
+              experiment: sat.id === "iss" ? "Microgravity plant biology and fluid dynamics sync." : undefined,
             })}
           />
         </div>

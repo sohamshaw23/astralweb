@@ -63,6 +63,13 @@ export function useMissionData() {
     { id: "s3", name: "ZENITH-ALERT", status: "critical", altitude: 358, velocity: 7.72, inclination: 28.5, latitude: -25.3, longitude: 130.8, signalStrength: 14 },
     { id: "s4", name: "COSMIC-SCAN-A", status: "nominal", altitude: 830, velocity: 7.43, inclination: 98.8, latitude: 48.85, longitude: 2.35, signalStrength: 91 },
     { id: "s5", name: "GUARDIAN-EYE-1", status: "nominal", altitude: 540, velocity: 7.59, inclination: 45.2, latitude: 38.9, longitude: -77.0, signalStrength: 89 },
+    { id: "s6", name: "ZENITH-03", status: "nominal", altitude: 480, velocity: 7.62, inclination: 51.6, latitude: 45.1, longitude: -12.3, signalStrength: 95 },
+    { id: "s7", name: "ZENITH-04", status: "nominal", altitude: 510, velocity: 7.60, inclination: 51.6, latitude: -15.4, longitude: 40.2, signalStrength: 93 },
+    { id: "s8", name: "COSMIC-SCAN-B", status: "nominal", altitude: 840, velocity: 7.42, inclination: 98.8, latitude: 20.5, longitude: 110.1, signalStrength: 88 },
+    { id: "s9", name: "GUARDIAN-EYE-2", status: "warning", altitude: 550, velocity: 7.58, inclination: 45.2, latitude: -30.2, longitude: -50.8, signalStrength: 68 },
+    { id: "s10", name: "METEO-SAT-9", status: "nominal", altitude: 720, velocity: 7.50, inclination: 82.4, latitude: 60.1, longitude: 90.3, signalStrength: 92 },
+    { id: "s11", name: "STAR-LINK-X", status: "critical", altitude: 340, velocity: 7.74, inclination: 53.0, latitude: 5.6, longitude: -80.2, signalStrength: 8 },
+    { id: "s12", name: "METEO-SAT-10", status: "nominal", altitude: 710, velocity: 7.52, inclination: 82.4, latitude: -40.1, longitude: 120.3, signalStrength: 96 }
   ]);
 
   const [logs, setLogs] = useState<string[]>([

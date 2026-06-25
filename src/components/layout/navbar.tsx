@@ -27,6 +27,7 @@ export function Navbar() {
     { label: "Mission Control", href: "/dashboard", icon: Terminal },
     { label: "Guardian Mode", href: "/guardian-mode", icon: Shield },
     { label: "Disaster Intel", href: "/disaster-intelligence", icon: Globe2 },
+    { label: "SSA Mode", href: "/ssa", icon: Sparkles },
     { label: "Celestial", href: "/celestial-explorer", icon: Moon },
   ];
 

@@ -32,6 +32,7 @@ interface EarthGlobeProps {
   };
   onToggleLayer?: (layer: "satellites" | "debris" | "orbits" | "disasters" | "assets") => void;
   showControls?: boolean;
+  autoRotate?: boolean;
 }
 
 export function EarthGlobe({
@@ -42,26 +43,65 @@ export function EarthGlobe({
   layers = { satellites: true, debris: true, orbits: true, disasters: true, assets: true },
   onToggleLayer = () => {},
   showControls = true,
+  autoRotate = true,
 }: EarthGlobeProps) {
   const globeRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 450, height: 450 });
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Make globe responsive to container size
+  useEffect(() => {
+    if (!mounted) return;
+
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const padding = 32; // 16px padding on left/right for p-4
+        const size = Math.max(0, Math.min(rect.width - padding, 400));
+        if (size > 0) {
+          setDimensions({
+            width: size,
+            height: size,
+          });
+        }
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, [mounted]);
 
   // Configure automatic rotation & zoom controls on mount
   useEffect(() => {
     if (mounted && globeRef.current) {
       const controls = globeRef.current.controls();
       if (controls) {
-        controls.autoRotate = true;
+        controls.autoRotate = autoRotate;
         controls.autoRotateSpeed = 0.55; // Smooth rotation
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
+        controls.minDistance = 150; // Allow user to zoom in more
+        controls.maxDistance = 330; // Prevent minimizing
+        controls.update();
       }
+
+      // Explicitly configure camera settings
+      const camera = globeRef.current.camera();
+      if (camera) {
+        camera.fov = 45; // Fixed field of view for consistent perspective
+        camera.updateProjectionMatrix();
+      }
+
+      // Position the camera to 2.0 altitude (distance 300) to keep 10% padding
+      globeRef.current.pointOfView({ altitude: 2.0 }, 0);
     }
-  }, [mounted, globeRef.current]);
+  }, [mounted, globeRef.current, autoRotate]);
 
   if (!mounted) return null;
 
@@ -161,11 +201,11 @@ export function EarthGlobe({
   return (
     <div className="flex flex-col items-center justify-center space-y-6 flex-grow w-full relative z-10 py-4">
       {/* 3D WebGL Globe View */}
-      <div className="relative w-full h-[320px] sm:h-[380px] md:h-[430px] rounded-full overflow-hidden flex items-center justify-center">
+      <div ref={containerRef} className="relative w-full max-w-[450px] aspect-square flex items-center justify-center p-4">
         <Globe
           ref={globeRef}
-          width={450}
-          height={450}
+          width={dimensions.width}
+          height={dimensions.height}
           backgroundColor="rgba(0, 0, 0, 0)"
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
@@ -188,7 +228,12 @@ export function EarthGlobe({
               <div>STATUS: <span style="color: ${d.status === 'nominal' ? '#00FFC8' : d.status === 'warning' ? '#FFC857' : '#FF4D4D'}">${d.status.toUpperCase()}</span></div>
             </div>
           `}
-          onPointClick={(d: any) => onSelectSatellite(d.originalSat)}
+          onPointClick={(d: any) => {
+            if (globeRef.current) {
+              globeRef.current.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.7 }, 1000);
+            }
+            onSelectSatellite(d.originalSat);
+          }}
 
           // Debris Cloud markers (custom overlay as dots with small altitude)
           customLayerData={[...debrisData]}

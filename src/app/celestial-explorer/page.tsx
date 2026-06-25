@@ -10,8 +10,10 @@ import {
   DetailsPanel,
 } from "@/components/celestial/sky-dome";
 import { Moon, Star, Compass } from "lucide-react";
+import { useMissionData } from "@/hooks/useMissionData";
 
 export default function CelestialExplorerPage() {
+  const { satellites } = useMissionData();
   const [utcTime, setUtcTime] = useState("");
   const [viewMode, setViewMode] = useState<"earth" | "sky" | "universe">("sky");
   const [selectedObject, setSelectedObject] = useState<CelestialObject | null>(null);
@@ -68,7 +70,7 @@ export default function CelestialExplorerPage() {
 
         {/* Center/Right Sky View (75% / 9 cols) */}
         <section className="lg:col-span-9 flex flex-col h-full">
-          <SkyDomeVisualizer mode={viewMode} onSelectObject={setSelectedObject} />
+          <SkyDomeVisualizer mode={viewMode} onSelectObject={setSelectedObject} satellites={satellites} />
         </section>
 
       </main>
