@@ -27,12 +27,12 @@ export default function DisasterIntelligencePage() {
     storm: true,
   });
 
-  const disasterEvents: DisasterEvent[] = [
+  const [disasterEvents, setDisasterEvents] = useState<DisasterEvent[]>([
     { id: "de-1", type: "wildfire", name: "NSW-WILDFIRE-09", location: "Australia, NSW", severity: 5, population: "145,000", satellite: "CARTOSAT-3", status: "ACTIVE", coordinates: [-33, 150] },
     { id: "de-2", type: "cyclone", name: "CYCLONE-IND-04", location: "India, Bay of Bengal", severity: 4, population: "1.2 Million", satellite: "RISAT-1A", status: "ACTIVE", coordinates: [15, 88] },
     { id: "de-3", type: "flood", name: "MEKONG-BASIN-FLOOD", location: "Southeast Asia", severity: 3, population: "840,000", satellite: "ZENITH-01", status: "MONITORING", coordinates: [10, 105] },
     { id: "de-4", type: "storm", name: "PACIFIC-TYPHOON-B", location: "West Pacific", severity: 2, population: "320,000", satellite: "ZENITH-02", status: "MONITORING", coordinates: [20, 130] },
-  ];
+  ]);
 
   const countBadges = {
     wildfire: disasterEvents.filter((e) => e.type === "wildfire").length,
@@ -40,6 +40,75 @@ export default function DisasterIntelligencePage() {
     flood: disasterEvents.filter((e) => e.type === "flood").length,
     storm: disasterEvents.filter((e) => e.type === "storm").length,
   };
+
+  useEffect(() => {
+    const fetchDisasters = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      try {
+        const res = await fetch(`${apiUrl}/api/disasters/live`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.events) && data.events.length > 0) {
+            const mapped: DisasterEvent[] = data.events.slice(0, 10).map((ev: any, idx: number) => {
+              const category = (ev.category || "wildfire").toLowerCase();
+              const type: "wildfire" | "cyclone" | "flood" | "storm" =
+                category.includes("fire") || category.includes("wildfire")
+                  ? "wildfire"
+                  : category.includes("cyclone") || category.includes("typhoon") || category.includes("storm") || category.includes("hurricane")
+                  ? "cyclone"
+                  : category.includes("flood") || category.includes("water")
+                  ? "flood"
+                  : "storm";
+                  
+              return {
+                id: ev.id || `de-live-${idx}`,
+                type,
+                name: ev.title || `${type.toUpperCase()}-EVENT-${idx}`,
+                location: ev.location || "Global Vector",
+                severity: ev.status === "closed" ? 2 : 4,
+                population: "Unspecified",
+                satellite: "ZENITH-01",
+                status: ev.status === "closed" ? "MONITORING" : "ACTIVE",
+                coordinates: ev.geometry ? [ev.geometry.coordinates[1], ev.geometry.coordinates[0]] : [0, 0],
+              };
+            });
+            setDisasterEvents(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch NASA disasters, attempting fallback to hotspots API", err);
+        try {
+          const res = await fetch(`${apiUrl}/api/disasters/hotspots`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && Array.isArray(data.hotspots) && data.hotspots.length > 0) {
+              const mapped: DisasterEvent[] = data.hotspots.slice(0, 8).map((hs: any, idx: number) => {
+                const severityVal = hs.severity === "Red" ? 5 : hs.severity === "Orange" ? 4 : 3;
+                return {
+                  id: hs.id || `de-hs-${idx}`,
+                  type: idx % 3 === 0 ? "wildfire" : idx % 3 === 1 ? "flood" : "cyclone",
+                  name: hs.title || `HOTSPOT-VECTOR-${idx}`,
+                  location: hs.country || "Global",
+                  severity: severityVal,
+                  population: "Local region",
+                  satellite: "ZENITH-02",
+                  status: "ACTIVE",
+                  coordinates: [hs.latitude, hs.longitude],
+                };
+              });
+              setDisasterEvents(mapped);
+            }
+          }
+        } catch (e) {
+          console.warn("Could not fetch hotspots, using local static data", e);
+        }
+      }
+    };
+    
+    fetchDisasters();
+    const interval = setInterval(fetchDisasters, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const clock = setInterval(() => {

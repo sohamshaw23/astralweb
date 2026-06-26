@@ -33,11 +33,45 @@ export default function GuardianModePage() {
     assets: false,
   });
 
-  const mockCollisionPairs: CollisionPair[] = [
+  const [collisionPairs, setCollisionPairs] = useState<CollisionPair[]>([
     { id: "c-091", satA: "ZENITH-02", satB: "COSMOS-2251", mass: 1850, velocity: 14.2, timeToApproach: 84, risk: 42 },
     { id: "c-104", satA: "ZENITH-ALERT", satB: "DEBRIS-491A", mass: 900, velocity: 11.8, timeToApproach: 192, risk: 18 },
     { id: "c-312", satA: "GUARDIAN-EYE-1", satB: "METEOR-DEBRIS", mass: 2400, velocity: 15.6, timeToApproach: 312, risk: 8 },
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchCollisions = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      try {
+        const res = await fetch(`${apiUrl}/api/analytics/collision/alerts`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.alerts) && data.alerts.length > 0) {
+            const mapped: CollisionPair[] = data.alerts.map((al: any, idx: number) => {
+              const riskVal = al.risk === "High" ? 45 : al.risk === "Critical" ? 85 : al.risk === "Moderate" ? 25 : 10;
+              const satBName = idx % 2 === 0 ? "COSMOS-2251" : "DEBRIS-GRID-90";
+              return {
+                id: `c-live-${idx}`,
+                satA: al.satellite || "ZENITH-ALERT",
+                satB: satBName,
+                mass: 1200 + (idx * 200),
+                velocity: 11.5 + (idx * 1.2),
+                timeToApproach: Math.round(al.distance_km * 25) || (60 + idx * 45),
+                risk: riskVal,
+              };
+            });
+            setCollisionPairs(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch collision alerts, keeping mock data.", err);
+      }
+    };
+
+    fetchCollisions();
+    const interval = setInterval(fetchCollisions, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const clock = setInterval(() => {
@@ -105,7 +139,7 @@ export default function GuardianModePage() {
 
         {/* Right Collision Threat Matrix (30% / 4 cols) */}
         <section className="lg:col-span-4 flex flex-col">
-          <CollisionFeed pairs={mockCollisionPairs} onAssess={handleAssessPair} />
+          <CollisionFeed pairs={collisionPairs} onAssess={handleAssessPair} />
         </section>
 
       </main>

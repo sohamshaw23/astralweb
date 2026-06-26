@@ -1,6 +1,5 @@
-"use client";
-
 import { useState, useEffect } from "react";
+import { getAnalytics, getSatellites } from "@/lib/api";
 
 export interface SatelliteInfo {
   id: string;
@@ -78,15 +77,104 @@ export function useMissionData() {
     "Scanning Southeast Asia coordinate array for thermal hazard indexes.",
   ]);
 
+  // Backend Integration Effect
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const analytics = await getAnalytics();
+        if (analytics) {
+          setSatelliteCount({
+            active: analytics.total_satellites || 23847,
+            warning: analytics.active_hotspots?.medium || 312,
+            critical: analytics.active_hotspots?.high || 47,
+          });
+        }
+      } catch (err) {
+        console.warn("Could not fetch analytics from backend, keeping mock data.", err);
+      }
+
+      try {
+        const liveSats = await getSatellites();
+        if (liveSats && liveSats.length > 0) {
+          const mapped = liveSats.slice(0, 12).map((sat, index) => {
+            const status: "nominal" | "warning" | "critical" =
+              index % 11 === 0 ? "critical" : index % 7 === 0 ? "warning" : "nominal";
+            return {
+              id: `s-${index + 1}`,
+              name: sat.name,
+              status,
+              altitude: sat.altitude_km,
+              velocity: Number((7.8 - (sat.altitude_km / 1000) * 0.4).toFixed(2)),
+              inclination: 51.6 + (index % 10),
+              latitude: sat.latitude,
+              longitude: sat.longitude,
+              signalStrength: status === "nominal" ? 90 + (index % 11) : status === "warning" ? 60 + (index % 13) : 10 + (index % 5),
+            };
+          });
+          setSatellites(mapped);
+        }
+      } catch (err) {
+        console.warn("Could not fetch live satellites from backend, keeping mock data.", err);
+      }
+
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${apiUrl}/api/analytics/anomaly/active`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const mapped = data.slice(0, 3).map((an: any, idx: number) => ({
+              id: an.id || `a-${idx}`,
+              source: an.satellite || `SAT-ZENITH-A${idx + 1}`,
+              score: Math.round(an.score || (70 - idx * 10)),
+              trend: (an.trend || (idx % 2 === 0 ? "up" : "stable")) as "up" | "down" | "stable",
+              timestamp: an.time || new Date().toLocaleTimeString(),
+            }));
+            setAnomalies(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch anomalies from backend, keeping mock data.", err);
+      }
+
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${apiUrl}/api/disasters/live`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.events)) {
+            const mapped = data.events.slice(0, 3).map((ev: any, idx: number) => ({
+              id: ev.id || `d-${idx}`,
+              type: ev.category || "Incident",
+              severity: (ev.status === "closed" ? "info" : "critical") as "critical" | "warning" | "info",
+              location: ev.title || "Global Vector",
+              coordinates: ev.geometry ? [ev.geometry.coordinates[1], ev.geometry.coordinates[0]] as [number, number] : [0, 0] as [number, number],
+            }));
+            if (mapped.length > 0) {
+              setDisasters(mapped);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch disasters from backend, keeping mock data.", err);
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 15000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Ambient Simulation Updates (Maintains 60 FPS Three.js rendering responsiveness)
   useEffect(() => {
     const updateInterval = setInterval(() => {
       // Trigger shimmer animation
       setShimmer(true);
       setTimeout(() => setShimmer(false), 800);
 
-      // Fluctuate counts
+      // Fluctuate counts gently
       setSatelliteCount((prev) => ({
-        active: prev.active + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 5),
+        active: prev.active + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 3),
         warning: prev.warning + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 2),
         critical: Math.max(40, prev.critical + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 2)),
       }));
@@ -95,9 +183,9 @@ export function useMissionData() {
       setSatellites((prev) =>
         prev.map((sat) => ({
           ...sat,
-          latitude: Number((sat.latitude + (Math.random() - 0.5) * 4).toFixed(4)),
-          longitude: Number((sat.longitude + (Math.random() - 0.5) * 4).toFixed(4)),
-          signalStrength: Math.max(10, Math.min(100, sat.signalStrength + Math.floor((Math.random() - 0.5) * 6))),
+          latitude: Number((sat.latitude + (Math.random() - 0.5) * 1.5).toFixed(4)),
+          longitude: Number((sat.longitude + (Math.random() - 0.5) * 1.5).toFixed(4)),
+          signalStrength: Math.max(10, Math.min(100, sat.signalStrength + Math.floor((Math.random() - 0.5) * 4))),
         }))
       );
 
@@ -105,7 +193,7 @@ export function useMissionData() {
       setAnomalies((prev) =>
         prev.map((anom) => ({
           ...anom,
-          score: Math.max(10, Math.min(99, anom.score + Math.floor((Math.random() - 0.5) * 8))),
+          score: Math.max(10, Math.min(99, anom.score + Math.floor((Math.random() - 0.5) * 6))),
           trend: Math.random() > 0.6 ? (Math.random() > 0.5 ? "up" : "down") : anom.trend,
         }))
       );
@@ -116,13 +204,13 @@ export function useMissionData() {
           "Warning: Spatial congestion detected in GEO slot 12B.",
           "Atmospheric telemetry calibrating sensor sweeps.",
           "Payload download verified for GUARDIAN-EYE-1.",
-          "Anomaly alert: Orbital drift registered on target segment s2.",
-          "Geospatial fire footprint expansion scanned on sector 44-D.",
+          "Anomaly alert: Orbital drift registered on target segment.",
+          "Geospatial fire footprint expansion scanned.",
         ];
         const randomEvent = events[Math.floor(Math.random() * events.length)];
         setLogs((prev) => [`[${new Date().toLocaleTimeString()}] ${randomEvent}`, ...prev.slice(0, 7)]);
       }
-    }, 4500);
+    }, 5000);
 
     return () => clearInterval(updateInterval);
   }, []);

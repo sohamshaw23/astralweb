@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { Moon, Star, Compass, Info, Users, Clock, Globe2, X } from "lucide-react";
 import { EarthGlobe } from "@/components/globe/earth-globe";
@@ -118,20 +118,20 @@ export function ObjectBrowser({
 }: {
   onSelectObject: (obj: CelestialObject) => void;
 }) {
-  const moonInfo = {
+  const [moonInfo, setMoonInfo] = useState({
     phase: "Waxing Gibbous",
     illumination: "78%",
     rise: "14:42 UTC",
     set: "03:12 UTC",
-  };
+  });
 
-  const issInfo = {
+  const [issInfo, setIssInfo] = useState({
     alt: 408,
     vel: "27,600 km/h",
     crew: ["S. Williams", "B. Wilmore", "M. Barratt", "M. Dominick", "J. Epps", "A. Grebenkin", "N. Kononenko"],
-  };
+  });
 
-  const categories: Record<string, any[]> = {
+  const [categories, setCategories] = useState<Record<string, any[]>>({
     planets: [
       { id: "p-mars", name: "Mars", category: "planet", classification: "Terrestrial Planet", distance: "225M KM", magnitude: "-1.5", discovery: "Ancient", description: "The fourth planet from the Sun and the second-smallest planet in the Solar System." },
       { id: "p-jupiter", name: "Jupiter", category: "planet", classification: "Gas Giant", distance: "778M KM", magnitude: "-2.7", discovery: "Ancient", description: "The fifth planet from the Sun and the largest in the Solar System." },
@@ -142,7 +142,93 @@ export function ObjectBrowser({
     dsos: [
       { id: "d-andromeda", name: "Andromeda Galaxy", category: "dso", classification: "Spiral Galaxy", distance: "2.537M LY", magnitude: "3.4", discovery: "964 AD", description: "A barred spiral galaxy approximately 2.5 million light-years from Earth and the nearest major galaxy to the Milky Way." },
     ],
-  };
+  });
+
+  useEffect(() => {
+    const fetchCelestialData = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      
+      // Moon Phase
+      try {
+        const res = await fetch(`${apiUrl}/api/celestial/moon`);
+        if (res.ok) {
+          const data = await res.json();
+          setMoonInfo((prev) => ({
+            ...prev,
+            phase: data.phase || prev.phase,
+          }));
+        }
+      } catch (e) {
+        console.warn("Could not fetch moon phase", e);
+      }
+
+      // ISS Stats
+      try {
+        const res = await fetch(`${apiUrl}/api/iss/telemetry`);
+        const crewRes = await fetch(`${apiUrl}/api/iss/crew`);
+        
+        let newAlt = issInfo.alt;
+        let newVel = issInfo.vel;
+        let newCrew = issInfo.crew;
+        
+        if (res.ok) {
+          const telemetry = await res.json();
+          newAlt = telemetry.altitude_km || newAlt;
+          newVel = `${(telemetry.velocity_kmh || 27600).toLocaleString()} km/h`;
+        }
+        
+        if (crewRes.ok) {
+          const crewData = await crewRes.json();
+          if (Array.isArray(crewData.crew)) {
+            newCrew = crewData.crew;
+          }
+        }
+        
+        setIssInfo({
+          alt: newAlt,
+          vel: newVel,
+          crew: newCrew,
+        });
+      } catch (e) {
+        console.warn("Could not fetch ISS stats", e);
+      }
+
+      // Planet distances
+      try {
+        const res = await fetch(`${apiUrl}/api/celestial/planets?lat=12.97&lon=77.59`);
+        if (res.ok) {
+          const planetPositions = await res.json();
+          if (Array.isArray(planetPositions)) {
+            setCategories((prev) => {
+              const updatedPlanets = prev.planets.map((planet) => {
+                const livePos = planetPositions.find(
+                  (p: any) => p.object.toLowerCase() === planet.name.toLowerCase()
+                );
+                if (livePos) {
+                  return {
+                    ...planet,
+                    distance: `${(livePos.distance_km || 0).toLocaleString()} KM`,
+                    magnitude: livePos.altitude ? `${livePos.altitude}° Alt` : planet.magnitude,
+                  };
+                }
+                return planet;
+              });
+              return {
+                ...prev,
+                planets: updatedPlanets,
+              };
+            });
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch planet positions", e);
+      }
+    };
+
+    fetchCelestialData();
+    const interval = setInterval(fetchCelestialData, 20000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-160px)] pr-2 font-mono text-xs select-none">
