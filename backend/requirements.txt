@@ -12,3 +12,6 @@ transformers
 sqlalchemy
 python-dotenv
 APScheduler
+psycopg2-binary
+gunicorn
+
