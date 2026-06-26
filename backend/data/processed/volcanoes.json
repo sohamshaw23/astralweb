@@ -1,0 +1,24 @@
+[
+    {
+        "id": "VOL_001",
+        "title": "Barren Island Volcano",
+        "description": "Active stratovolcano in the Andaman Sea",
+        "country": "India",
+        "severity": "Moderate",
+        "longitude": 93.8584,
+        "latitude": 12.2783,
+        "alertlevel": "Yellow",
+        "status": "Active"
+    },
+    {
+        "id": "VOL_002",
+        "title": "Mount Ruang Eruption",
+        "description": "Explosive eruption with ash clouds in North Sulawesi",
+        "country": "Indonesia",
+        "severity": "High",
+        "longitude": 125.37,
+        "latitude": 2.3,
+        "alertlevel": "Red",
+        "status": "Active"
+    }
+]

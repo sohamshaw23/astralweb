@@ -1,0 +1,58 @@
+"""
+Project Zenith
+Confusion Matrix Generator
+"""
+
+import matplotlib.pyplot as plt
+
+from sklearn.metrics import confusion_matrix
+
+import seaborn as sns
+
+
+class ConfusionMatrix:
+
+    @staticmethod
+    def generate(
+
+        y_true,
+
+        y_pred,
+
+        save_path="confusion_matrix.png"
+
+    ):
+
+        cm = confusion_matrix(
+
+            y_true,
+
+            y_pred
+
+        )
+
+        plt.figure(figsize=(6,6))
+
+        sns.heatmap(
+
+            cm,
+
+            annot=True,
+
+            fmt="d",
+
+            cmap="Blues"
+
+        )
+
+        plt.xlabel("Predicted")
+
+        plt.ylabel("Actual")
+
+        plt.tight_layout()
+
+        plt.savefig(save_path)
+
+        return save_path
+
+# EOF

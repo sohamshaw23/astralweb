@@ -1,0 +1,98 @@
+"""
+routes/health_routes.py
+
+Project Zenith
+Health Routes
+"""
+
+from flask import Blueprint
+from api.health import (
+    health,
+    ping,
+    status,
+    system,
+    uptime,
+    services,
+    metrics,
+    version,
+    readiness,
+    liveness,
+    scheduler
+)
+
+health_routes = Blueprint(
+    "health_routes",
+    __name__
+)
+
+
+# ----------------------------------------
+# Health
+# ----------------------------------------
+
+health_routes.add_url_rule(
+    "/",
+    view_func=health,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/ping",
+    view_func=ping,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/status",
+    view_func=status,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/system",
+    view_func=system,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/uptime",
+    view_func=uptime,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/services",
+    view_func=services,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/metrics",
+    view_func=metrics,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/version",
+    view_func=version,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/ready",
+    view_func=readiness,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/live",
+    view_func=liveness,
+    methods=["GET"]
+)
+
+health_routes.add_url_rule(
+    "/scheduler",
+    view_func=scheduler,
+    methods=["GET"]
+)
+

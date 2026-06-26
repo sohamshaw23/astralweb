@@ -1,0 +1,74 @@
+"""
+Project Zenith
+ROC Curve
+"""
+
+import matplotlib.pyplot as plt
+
+from sklearn.metrics import roc_curve, auc
+
+
+class ROCPlot:
+
+    @staticmethod
+    def plot(
+
+        y_true,
+
+        probabilities,
+
+        save_path="roc_curve.png"
+
+    ):
+
+        fpr, tpr, _ = roc_curve(
+
+            y_true,
+
+            probabilities
+
+        )
+
+        score = auc(
+
+            fpr,
+
+            tpr
+
+        )
+
+        plt.figure(figsize=(6,6))
+
+        plt.plot(
+
+            fpr,
+
+            tpr,
+
+            label=f"AUC = {score:.3f}"
+
+        )
+
+        plt.plot(
+
+            [0,1],
+
+            [0,1],
+
+            "--"
+
+        )
+
+        plt.xlabel("False Positive Rate")
+
+        plt.ylabel("True Positive Rate")
+
+        plt.legend()
+
+        plt.tight_layout()
+
+        plt.savefig(save_path)
+
+        plt.close()
+
+        return save_path

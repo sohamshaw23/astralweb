@@ -1,0 +1,26 @@
+"""
+routes/celestial_routes.py
+
+Project Zenith
+Celestial Intelligence Routes
+"""
+
+from flask import Blueprint
+
+# Import Celestial Blueprint
+from api.celestial import celestial_bp
+
+celestial_routes = Blueprint(
+    "celestial_routes",
+    __name__
+)
+
+
+# ---------------------------------------------------------
+# Register Celestial Blueprint
+# ---------------------------------------------------------
+
+celestial_routes.register_blueprint(
+    celestial_bp,
+    url_prefix="/"
+)

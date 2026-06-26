@@ -1,0 +1,4 @@
+altitude_region,congestion_index,density_rating
+LEO,0.75,High
+MEO,0.15,Low
+GEO,0.45,Moderate

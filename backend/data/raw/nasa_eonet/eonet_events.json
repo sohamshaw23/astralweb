@@ -1,0 +1,65 @@
+{
+    "title": "NASA EONET Events",
+    "description": "Earth Observatory Natural Hazards Events",
+    "link": "https://eonet.gsfc.nasa.gov/api/v3/events",
+    "events": [
+        {
+            "id": "EONET_5111",
+            "title": "Wildfire - Los Angeles, California",
+            "description": "",
+            "link": "https://eonet.gsfc.nasa.gov/api/v3/events/EONET_5111",
+            "closed": null,
+            "categories": [
+                {
+                    "id": "wildfires",
+                    "title": "Wildfires"
+                }
+            ],
+            "sources": [
+                {
+                    "id": "PDC",
+                    "url": "http://www.pdc.org/"
+                }
+            ],
+            "geometries": [
+                {
+                    "date": "2026-06-25T12:00:00Z",
+                    "type": "Point",
+                    "coordinates": [
+                        -118.2437,
+                        34.0522
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "EONET_5112",
+            "title": "Cyclone Yasmin",
+            "description": "",
+            "link": "https://eonet.gsfc.nasa.gov/api/v3/events/EONET_5112",
+            "closed": null,
+            "categories": [
+                {
+                    "id": "severeStorms",
+                    "title": "Severe Storms"
+                }
+            ],
+            "sources": [
+                {
+                    "id": "JTWC",
+                    "url": "https://www.metoc.navy.mil/jtwc/jtwc.html"
+                }
+            ],
+            "geometries": [
+                {
+                    "date": "2026-06-26T06:00:00Z",
+                    "type": "Point",
+                    "coordinates": [
+                        88.3639,
+                        22.5726
+                    ]
+                }
+            ]
+        }
+    ]
+}

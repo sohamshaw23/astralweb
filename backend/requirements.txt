@@ -1,0 +1,14 @@
+flask
+flask-cors
+skyfield
+pandas
+numpy
+xgboost
+scikit-learn
+matplotlib
+seaborn
+requests
+transformers
+sqlalchemy
+python-dotenv
+APScheduler

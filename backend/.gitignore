@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS / Editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Environment files
+.env
+.venv
+env/
+venv/
+
+# Pytest / Cache
+.pytest_cache/
+.cache/
+
+# Large binary files (downloaded dynamically if needed)
+de421.bsp

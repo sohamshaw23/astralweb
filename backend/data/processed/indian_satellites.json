@@ -1,0 +1,51 @@
+[
+    {
+        "id": "SAT_001",
+        "name": "INSAT-3D",
+        "type": "Weather",
+        "status": "Active",
+        "launch_year": 2013
+    },
+    {
+        "id": "SAT_002",
+        "name": "INSAT-3DR",
+        "type": "Weather",
+        "status": "Active",
+        "launch_year": 2016
+    },
+    {
+        "id": "SAT_003",
+        "name": "EOS-04",
+        "type": "Earth Observation",
+        "status": "Active",
+        "launch_year": 2022
+    },
+    {
+        "id": "SAT_004",
+        "name": "EOS-06",
+        "type": "Oceanography",
+        "status": "Active",
+        "launch_year": 2022
+    },
+    {
+        "id": "SAT_005",
+        "name": "Cartosat-3",
+        "type": "Mapping",
+        "status": "Active",
+        "launch_year": 2019
+    },
+    {
+        "id": "SAT_006",
+        "name": "GSAT-7A",
+        "type": "Military Communication",
+        "status": "Active",
+        "launch_year": 2018
+    },
+    {
+        "id": "SAT_007",
+        "name": "Risat-2B",
+        "type": "Radar Imaging",
+        "status": "Active",
+        "launch_year": 2019
+    }
+]

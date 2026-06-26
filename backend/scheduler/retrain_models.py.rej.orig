@@ -1,0 +1,40 @@
+@@ -1,4 +1,37 @@
+ """
+-Project Zenith Backend - Retrain Models Module
+-"""
++scheduler/retrain_models.py
++
++Retrains ML Models
++"""
++
++from ml.xgboost_collision import train_collision_model
++from ml.anomaly_detector import train_anomaly_model
++from ml.hotspot_predictor import train_hotspot_model
++from ml.disaster_classifier import train_disaster_model
++
++
++def retrain():
++
++    print("Retraining XGBoost...")
++
++    train_collision_model()
++
++    print("Retraining Isolation Forest...")
++
++    train_anomaly_model()
++
++    print("Retraining Hotspot Model...")
++
++    train_hotspot_model()
++
++    print("Retraining Disaster Model...")
++
++    train_disaster_model()
++
++    print("All Models Updated Successfully.")
++
++
++if __name__ == "__main__":
++
++    retrain()
+ 

@@ -1,0 +1,26 @@
+"""
+routes/satellite_routes.py
+
+Project Zenith
+Satellite Routes
+"""
+
+from flask import Blueprint
+
+# Import Satellite Blueprint
+from api.satellites import satellite_bp
+
+satellite_routes = Blueprint(
+    "satellite_routes",
+    __name__
+)
+
+
+# -----------------------------------------------------
+# Register Satellite Blueprint
+# -----------------------------------------------------
+
+satellite_routes.register_blueprint(
+    satellite_bp,
+    url_prefix="/"
+)

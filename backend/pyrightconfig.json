@@ -1,0 +1,16 @@
+{
+  "venvPath": "/Users/sohamshaw/zenith_backend",
+  "venv": ".venv",
+  "useLibraryCodeForTypes": true,
+  "extraPaths": [
+    "venv_site_packages"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".venv",
+    "dotenv",
+    "sqlalchemy",
+    "transformers"
+  ]
+}

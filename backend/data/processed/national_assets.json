@@ -1,0 +1,37 @@
+[
+    {
+        "id": "ASSET_001",
+        "name": "INSAT-3D Weather Imager",
+        "owner": "ISRO",
+        "criticality": "High",
+        "region": "GEO"
+    },
+    {
+        "id": "ASSET_002",
+        "name": "INSAT-3DR Meteorological Sounder",
+        "owner": "ISRO",
+        "criticality": "High",
+        "region": "GEO"
+    },
+    {
+        "id": "ASSET_003",
+        "name": "Cartosat-3 High Resolution Surveillance",
+        "owner": "ISRO/Defence",
+        "criticality": "Critical",
+        "region": "SSO"
+    },
+    {
+        "id": "ASSET_004",
+        "name": "GSAT-7 Navy Communication Payload",
+        "owner": "Indian Navy",
+        "criticality": "Critical",
+        "region": "GEO"
+    },
+    {
+        "id": "ASSET_005",
+        "name": "EOS-06 Ocean Color Monitor",
+        "owner": "ISRO",
+        "criticality": "Medium",
+        "region": "SSO"
+    }
+]

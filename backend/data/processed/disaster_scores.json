@@ -1,0 +1,702 @@
+[
+    {
+        "region": "Region_0",
+        "hazard_score": 39.0,
+        "vulnerability_score": 67.0,
+        "mitigation_score": 55.0,
+        "composite_risk": 72.0
+    },
+    {
+        "region": "Region_1",
+        "hazard_score": 93.0,
+        "vulnerability_score": 67.0,
+        "mitigation_score": 47.0,
+        "composite_risk": 64.0
+    },
+    {
+        "region": "Region_2",
+        "hazard_score": 31.0,
+        "vulnerability_score": 54.0,
+        "mitigation_score": 52.0,
+        "composite_risk": 59.0
+    },
+    {
+        "region": "Region_3",
+        "hazard_score": 23.0,
+        "vulnerability_score": 68.0,
+        "mitigation_score": 76.0,
+        "composite_risk": 54.0
+    },
+    {
+        "region": "Region_4",
+        "hazard_score": 29.0,
+        "vulnerability_score": 35.0,
+        "mitigation_score": 75.0,
+        "composite_risk": 91.0
+    },
+    {
+        "region": "Region_5",
+        "hazard_score": 54.0,
+        "vulnerability_score": 69.0,
+        "mitigation_score": 89.0,
+        "composite_risk": 45.0
+    },
+    {
+        "region": "Region_6",
+        "hazard_score": 49.0,
+        "vulnerability_score": 54.0,
+        "mitigation_score": 46.0,
+        "composite_risk": 50.0
+    },
+    {
+        "region": "Region_7",
+        "hazard_score": 29.0,
+        "vulnerability_score": 56.0,
+        "mitigation_score": 46.0,
+        "composite_risk": 89.0
+    },
+    {
+        "region": "Region_8",
+        "hazard_score": 83.0,
+        "vulnerability_score": 60.0,
+        "mitigation_score": 80.0,
+        "composite_risk": 56.0
+    },
+    {
+        "region": "Region_9",
+        "hazard_score": 55.0,
+        "vulnerability_score": 55.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 55.0
+    },
+    {
+        "region": "Region_10",
+        "hazard_score": 88.0,
+        "vulnerability_score": 26.0,
+        "mitigation_score": 39.0,
+        "composite_risk": 33.0
+    },
+    {
+        "region": "Region_11",
+        "hazard_score": 55.0,
+        "vulnerability_score": 44.0,
+        "mitigation_score": 52.0,
+        "composite_risk": 29.0
+    },
+    {
+        "region": "Region_12",
+        "hazard_score": 78.0,
+        "vulnerability_score": 39.0,
+        "mitigation_score": 56.0,
+        "composite_risk": 47.0
+    },
+    {
+        "region": "Region_13",
+        "hazard_score": 44.0,
+        "vulnerability_score": 67.0,
+        "mitigation_score": 55.0,
+        "composite_risk": 51.0
+    },
+    {
+        "region": "Region_14",
+        "hazard_score": 13.0,
+        "vulnerability_score": 42.0,
+        "mitigation_score": 74.0,
+        "composite_risk": 59.0
+    },
+    {
+        "region": "Region_15",
+        "hazard_score": 75.0,
+        "vulnerability_score": 65.0,
+        "mitigation_score": 50.0,
+        "composite_risk": 85.0
+    },
+    {
+        "region": "Region_16",
+        "hazard_score": 58.0,
+        "vulnerability_score": 32.0,
+        "mitigation_score": 39.0,
+        "composite_risk": 76.0
+    },
+    {
+        "region": "Region_17",
+        "hazard_score": 11.0,
+        "vulnerability_score": 80.0,
+        "mitigation_score": 39.0,
+        "composite_risk": 80.0
+    },
+    {
+        "region": "Region_18",
+        "hazard_score": 80.0,
+        "vulnerability_score": 81.0,
+        "mitigation_score": 66.0,
+        "composite_risk": 60.0
+    },
+    {
+        "region": "Region_19",
+        "hazard_score": 35.0,
+        "vulnerability_score": 40.0,
+        "mitigation_score": 88.0,
+        "composite_risk": 66.0
+    },
+    {
+        "region": "Region_20",
+        "hazard_score": 68.0,
+        "vulnerability_score": 76.0,
+        "mitigation_score": 77.0,
+        "composite_risk": 92.0
+    },
+    {
+        "region": "Region_21",
+        "hazard_score": 87.0,
+        "vulnerability_score": 29.0,
+        "mitigation_score": 46.0,
+        "composite_risk": 24.0
+    },
+    {
+        "region": "Region_22",
+        "hazard_score": 52.0,
+        "vulnerability_score": 51.0,
+        "mitigation_score": 71.0,
+        "composite_risk": 48.0
+    },
+    {
+        "region": "Region_23",
+        "hazard_score": 44.0,
+        "vulnerability_score": 20.0,
+        "mitigation_score": 66.0,
+        "composite_risk": 79.0
+    },
+    {
+        "region": "Region_24",
+        "hazard_score": 78.0,
+        "vulnerability_score": 33.0,
+        "mitigation_score": 62.0,
+        "composite_risk": 46.0
+    },
+    {
+        "region": "Region_25",
+        "hazard_score": 90.0,
+        "vulnerability_score": 77.0,
+        "mitigation_score": 32.0,
+        "composite_risk": 67.0
+    },
+    {
+        "region": "Region_26",
+        "hazard_score": 56.0,
+        "vulnerability_score": 33.0,
+        "mitigation_score": 61.0,
+        "composite_risk": 63.0
+    },
+    {
+        "region": "Region_27",
+        "hazard_score": 31.0,
+        "vulnerability_score": 23.0,
+        "mitigation_score": 75.0,
+        "composite_risk": 45.0
+    },
+    {
+        "region": "Region_28",
+        "hazard_score": 85.0,
+        "vulnerability_score": 26.0,
+        "mitigation_score": 53.0,
+        "composite_risk": 76.0
+    },
+    {
+        "region": "Region_29",
+        "hazard_score": 12.0,
+        "vulnerability_score": 73.0,
+        "mitigation_score": 56.0,
+        "composite_risk": 18.0
+    },
+    {
+        "region": "Region_30",
+        "hazard_score": 86.0,
+        "vulnerability_score": 61.0,
+        "mitigation_score": 38.0,
+        "composite_risk": 77.0
+    },
+    {
+        "region": "Region_31",
+        "hazard_score": 47.0,
+        "vulnerability_score": 80.0,
+        "mitigation_score": 39.0,
+        "composite_risk": 26.0
+    },
+    {
+        "region": "Region_32",
+        "hazard_score": 19.0,
+        "vulnerability_score": 33.0,
+        "mitigation_score": 68.0,
+        "composite_risk": 72.0
+    },
+    {
+        "region": "Region_33",
+        "hazard_score": 66.0,
+        "vulnerability_score": 83.0,
+        "mitigation_score": 57.0,
+        "composite_risk": 34.0
+    },
+    {
+        "region": "Region_34",
+        "hazard_score": 58.0,
+        "vulnerability_score": 22.0,
+        "mitigation_score": 42.0,
+        "composite_risk": 28.0
+    },
+    {
+        "region": "Region_35",
+        "hazard_score": 49.0,
+        "vulnerability_score": 71.0,
+        "mitigation_score": 63.0,
+        "composite_risk": 47.0
+    },
+    {
+        "region": "Region_36",
+        "hazard_score": 77.0,
+        "vulnerability_score": 20.0,
+        "mitigation_score": 58.0,
+        "composite_risk": 85.0
+    },
+    {
+        "region": "Region_37",
+        "hazard_score": 89.0,
+        "vulnerability_score": 47.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 63.0
+    },
+    {
+        "region": "Region_38",
+        "hazard_score": 25.0,
+        "vulnerability_score": 52.0,
+        "mitigation_score": 35.0,
+        "composite_risk": 42.0
+    },
+    {
+        "region": "Region_39",
+        "hazard_score": 84.0,
+        "vulnerability_score": 40.0,
+        "mitigation_score": 49.0,
+        "composite_risk": 57.0
+    },
+    {
+        "region": "Region_40",
+        "hazard_score": 37.0,
+        "vulnerability_score": 78.0,
+        "mitigation_score": 53.0,
+        "composite_risk": 94.0
+    },
+    {
+        "region": "Region_41",
+        "hazard_score": 55.0,
+        "vulnerability_score": 20.0,
+        "mitigation_score": 53.0,
+        "composite_risk": 62.0
+    },
+    {
+        "region": "Region_42",
+        "hazard_score": 20.0,
+        "vulnerability_score": 53.0,
+        "mitigation_score": 69.0,
+        "composite_risk": 39.0
+    },
+    {
+        "region": "Region_43",
+        "hazard_score": 81.0,
+        "vulnerability_score": 76.0,
+        "mitigation_score": 75.0,
+        "composite_risk": 81.0
+    },
+    {
+        "region": "Region_44",
+        "hazard_score": 27.0,
+        "vulnerability_score": 27.0,
+        "mitigation_score": 74.0,
+        "composite_risk": 94.0
+    },
+    {
+        "region": "Region_45",
+        "hazard_score": 62.0,
+        "vulnerability_score": 52.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 43.0
+    },
+    {
+        "region": "Region_46",
+        "hazard_score": 92.0,
+        "vulnerability_score": 58.0,
+        "mitigation_score": 79.0,
+        "composite_risk": 76.0
+    },
+    {
+        "region": "Region_47",
+        "hazard_score": 28.0,
+        "vulnerability_score": 79.0,
+        "mitigation_score": 63.0,
+        "composite_risk": 84.0
+    },
+    {
+        "region": "Region_48",
+        "hazard_score": 89.0,
+        "vulnerability_score": 66.0,
+        "mitigation_score": 37.0,
+        "composite_risk": 65.0
+    },
+    {
+        "region": "Region_49",
+        "hazard_score": 80.0,
+        "vulnerability_score": 21.0,
+        "mitigation_score": 84.0,
+        "composite_risk": 43.0
+    },
+    {
+        "region": "Region_50",
+        "hazard_score": 52.0,
+        "vulnerability_score": 40.0,
+        "mitigation_score": 77.0,
+        "composite_risk": 52.0
+    },
+    {
+        "region": "Region_51",
+        "hazard_score": 54.0,
+        "vulnerability_score": 48.0,
+        "mitigation_score": 80.0,
+        "composite_risk": 50.0
+    },
+    {
+        "region": "Region_52",
+        "hazard_score": 10.0,
+        "vulnerability_score": 80.0,
+        "mitigation_score": 32.0,
+        "composite_risk": 52.0
+    },
+    {
+        "region": "Region_53",
+        "hazard_score": 90.0,
+        "vulnerability_score": 84.0,
+        "mitigation_score": 30.0,
+        "composite_risk": 46.0
+    },
+    {
+        "region": "Region_54",
+        "hazard_score": 93.0,
+        "vulnerability_score": 64.0,
+        "mitigation_score": 83.0,
+        "composite_risk": 75.0
+    },
+    {
+        "region": "Region_55",
+        "hazard_score": 43.0,
+        "vulnerability_score": 60.0,
+        "mitigation_score": 49.0,
+        "composite_risk": 75.0
+    },
+    {
+        "region": "Region_56",
+        "hazard_score": 40.0,
+        "vulnerability_score": 71.0,
+        "mitigation_score": 35.0,
+        "composite_risk": 35.0
+    },
+    {
+        "region": "Region_57",
+        "hazard_score": 78.0,
+        "vulnerability_score": 74.0,
+        "mitigation_score": 37.0,
+        "composite_risk": 50.0
+    },
+    {
+        "region": "Region_58",
+        "hazard_score": 84.0,
+        "vulnerability_score": 81.0,
+        "mitigation_score": 46.0,
+        "composite_risk": 37.0
+    },
+    {
+        "region": "Region_59",
+        "hazard_score": 24.0,
+        "vulnerability_score": 41.0,
+        "mitigation_score": 54.0,
+        "composite_risk": 91.0
+    },
+    {
+        "region": "Region_60",
+        "hazard_score": 30.0,
+        "vulnerability_score": 57.0,
+        "mitigation_score": 84.0,
+        "composite_risk": 81.0
+    },
+    {
+        "region": "Region_61",
+        "hazard_score": 51.0,
+        "vulnerability_score": 28.0,
+        "mitigation_score": 61.0,
+        "composite_risk": 27.0
+    },
+    {
+        "region": "Region_62",
+        "hazard_score": 91.0,
+        "vulnerability_score": 71.0,
+        "mitigation_score": 74.0,
+        "composite_risk": 93.0
+    },
+    {
+        "region": "Region_63",
+        "hazard_score": 23.0,
+        "vulnerability_score": 29.0,
+        "mitigation_score": 72.0,
+        "composite_risk": 82.0
+    },
+    {
+        "region": "Region_64",
+        "hazard_score": 42.0,
+        "vulnerability_score": 41.0,
+        "mitigation_score": 71.0,
+        "composite_risk": 77.0
+    },
+    {
+        "region": "Region_65",
+        "hazard_score": 50.0,
+        "vulnerability_score": 83.0,
+        "mitigation_score": 88.0,
+        "composite_risk": 17.0
+    },
+    {
+        "region": "Region_66",
+        "hazard_score": 51.0,
+        "vulnerability_score": 53.0,
+        "mitigation_score": 34.0,
+        "composite_risk": 24.0
+    },
+    {
+        "region": "Region_67",
+        "hazard_score": 26.0,
+        "vulnerability_score": 30.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 54.0
+    },
+    {
+        "region": "Region_68",
+        "hazard_score": 75.0,
+        "vulnerability_score": 39.0,
+        "mitigation_score": 86.0,
+        "composite_risk": 66.0
+    },
+    {
+        "region": "Region_69",
+        "hazard_score": 18.0,
+        "vulnerability_score": 80.0,
+        "mitigation_score": 56.0,
+        "composite_risk": 47.0
+    },
+    {
+        "region": "Region_70",
+        "hazard_score": 32.0,
+        "vulnerability_score": 67.0,
+        "mitigation_score": 30.0,
+        "composite_risk": 46.0
+    },
+    {
+        "region": "Region_71",
+        "hazard_score": 90.0,
+        "vulnerability_score": 52.0,
+        "mitigation_score": 73.0,
+        "composite_risk": 64.0
+    },
+    {
+        "region": "Region_72",
+        "hazard_score": 91.0,
+        "vulnerability_score": 38.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 51.0
+    },
+    {
+        "region": "Region_73",
+        "hazard_score": 16.0,
+        "vulnerability_score": 32.0,
+        "mitigation_score": 54.0,
+        "composite_risk": 74.0
+    },
+    {
+        "region": "Region_74",
+        "hazard_score": 77.0,
+        "vulnerability_score": 40.0,
+        "mitigation_score": 61.0,
+        "composite_risk": 31.0
+    },
+    {
+        "region": "Region_75",
+        "hazard_score": 74.0,
+        "vulnerability_score": 52.0,
+        "mitigation_score": 40.0,
+        "composite_risk": 47.0
+    },
+    {
+        "region": "Region_76",
+        "hazard_score": 78.0,
+        "vulnerability_score": 76.0,
+        "mitigation_score": 42.0,
+        "composite_risk": 73.0
+    },
+    {
+        "region": "Region_77",
+        "hazard_score": 69.0,
+        "vulnerability_score": 34.0,
+        "mitigation_score": 71.0,
+        "composite_risk": 49.0
+    },
+    {
+        "region": "Region_78",
+        "hazard_score": 77.0,
+        "vulnerability_score": 65.0,
+        "mitigation_score": 31.0,
+        "composite_risk": 94.0
+    },
+    {
+        "region": "Region_79",
+        "hazard_score": 17.0,
+        "vulnerability_score": 75.0,
+        "mitigation_score": 74.0,
+        "composite_risk": 51.0
+    },
+    {
+        "region": "Region_80",
+        "hazard_score": 54.0,
+        "vulnerability_score": 73.0,
+        "mitigation_score": 81.0,
+        "composite_risk": 65.0
+    },
+    {
+        "region": "Region_81",
+        "hazard_score": 65.0,
+        "vulnerability_score": 46.0,
+        "mitigation_score": 72.0,
+        "composite_risk": 19.0
+    },
+    {
+        "region": "Region_82",
+        "hazard_score": 70.0,
+        "vulnerability_score": 38.0,
+        "mitigation_score": 74.0,
+        "composite_risk": 58.0
+    },
+    {
+        "region": "Region_83",
+        "hazard_score": 77.0,
+        "vulnerability_score": 44.0,
+        "mitigation_score": 34.0,
+        "composite_risk": 94.0
+    },
+    {
+        "region": "Region_84",
+        "hazard_score": 78.0,
+        "vulnerability_score": 39.0,
+        "mitigation_score": 77.0,
+        "composite_risk": 68.0
+    },
+    {
+        "region": "Region_85",
+        "hazard_score": 22.0,
+        "vulnerability_score": 39.0,
+        "mitigation_score": 45.0,
+        "composite_risk": 46.0
+    },
+    {
+        "region": "Region_86",
+        "hazard_score": 89.0,
+        "vulnerability_score": 69.0,
+        "mitigation_score": 52.0,
+        "composite_risk": 74.0
+    },
+    {
+        "region": "Region_87",
+        "hazard_score": 37.0,
+        "vulnerability_score": 38.0,
+        "mitigation_score": 42.0,
+        "composite_risk": 45.0
+    },
+    {
+        "region": "Region_88",
+        "hazard_score": 32.0,
+        "vulnerability_score": 60.0,
+        "mitigation_score": 83.0,
+        "composite_risk": 21.0
+    },
+    {
+        "region": "Region_89",
+        "hazard_score": 69.0,
+        "vulnerability_score": 34.0,
+        "mitigation_score": 48.0,
+        "composite_risk": 20.0
+    },
+    {
+        "region": "Region_90",
+        "hazard_score": 69.0,
+        "vulnerability_score": 71.0,
+        "mitigation_score": 36.0,
+        "composite_risk": 77.0
+    },
+    {
+        "region": "Region_91",
+        "hazard_score": 86.0,
+        "vulnerability_score": 37.0,
+        "mitigation_score": 78.0,
+        "composite_risk": 67.0
+    },
+    {
+        "region": "Region_92",
+        "hazard_score": 65.0,
+        "vulnerability_score": 72.0,
+        "mitigation_score": 88.0,
+        "composite_risk": 44.0
+    },
+    {
+        "region": "Region_93",
+        "hazard_score": 35.0,
+        "vulnerability_score": 20.0,
+        "mitigation_score": 83.0,
+        "composite_risk": 34.0
+    },
+    {
+        "region": "Region_94",
+        "hazard_score": 63.0,
+        "vulnerability_score": 32.0,
+        "mitigation_score": 72.0,
+        "composite_risk": 63.0
+    },
+    {
+        "region": "Region_95",
+        "hazard_score": 93.0,
+        "vulnerability_score": 68.0,
+        "mitigation_score": 36.0,
+        "composite_risk": 59.0
+    },
+    {
+        "region": "Region_96",
+        "hazard_score": 59.0,
+        "vulnerability_score": 59.0,
+        "mitigation_score": 86.0,
+        "composite_risk": 50.0
+    },
+    {
+        "region": "Region_97",
+        "hazard_score": 81.0,
+        "vulnerability_score": 60.0,
+        "mitigation_score": 37.0,
+        "composite_risk": 33.0
+    },
+    {
+        "region": "Region_98",
+        "hazard_score": 34.0,
+        "vulnerability_score": 51.0,
+        "mitigation_score": 38.0,
+        "composite_risk": 92.0
+    },
+    {
+        "region": "Region_99",
+        "hazard_score": 57.0,
+        "vulnerability_score": 29.0,
+        "mitigation_score": 63.0,
+        "composite_risk": 21.0
+    }
+]

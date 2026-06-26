@@ -1,0 +1,126 @@
+from flask import Flask
+from flask import Flask
+from flask_cors import CORS
+
+# External API Routes
+from routes.celestial_routes import celestial_bp
+from routes.satellite_routes import satellite_bp
+from routes.disaster_routes import disaster_bp
+from routes.health_routes import health_bp
+
+# Proprietary APIs
+from routes.proprietary_routes import proprietary_bp
+
+# AI Routes
+from routes.ai_routes import ai_bp
+
+
+def create_app():
+    app = Flask(__name__)
+
+    # Configuration
+    app.config.from_object("config.Config")
+
+    # Enable CORS
+    CORS(app)
+
+    # -------------------------
+    # Register Blueprints
+    # -------------------------
+
+    # Health Check
+    app.register_blueprint(health_bp, url_prefix="/api")
+
+    # External APIs
+    app.register_blueprint(celestial_bp, url_prefix="/api/celestial")
+    app.register_blueprint(satellite_bp, url_prefix="/api/satellites")
+    app.register_blueprint(disaster_bp, url_prefix="/api/disasters")
+
+    # Proprietary Analytics APIs
+    app.register_blueprint(proprietary_bp, url_prefix="/api/analytics")
+
+    # AI Assistant
+    app.register_blueprint(ai_bp, url_prefix="/api/ai")
+
+    @app.route("/")
+    def home():
+        return {
+            "project": "Project Zenith",
+            "version": "1.0.0",
+            "status": "Running",
+            "description": "Space Situational Awareness & Disaster Intelligence Platform"
+        }
+
+    return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
+from flask_cors import CORS
+
+# External API Routes
+from routes.celestial_routes import celestial_bp
+from routes.satellite_routes import satellite_bp
+from routes.disaster_routes import disaster_bp
+from routes.health_routes import health_bp
+
+# Proprietary APIs
+from routes.proprietary_routes import proprietary_bp
+
+# AI Routes
+from routes.ai_routes import ai_bp
+
+
+def create_app():
+    app = Flask(__name__)
+
+    # Configuration
+    app.config.from_object("config.Config")
+
+    # Enable CORS
+    CORS(app)
+
+    # -------------------------
+    # Register Blueprints
+    # -------------------------
+
+    # Health Check
+    app.register_blueprint(health_bp, url_prefix="/api")
+
+    # External APIs
+    app.register_blueprint(celestial_bp, url_prefix="/api/celestial")
+    app.register_blueprint(satellite_bp, url_prefix="/api/satellites")
+    app.register_blueprint(disaster_bp, url_prefix="/api/disasters")
+
+    # Proprietary Analytics APIs
+    app.register_blueprint(proprietary_bp, url_prefix="/api/analytics")
+
+    # AI Assistant
+    app.register_blueprint(ai_bp, url_prefix="/api/ai")
+
+    @app.route("/")
+    def home():
+        return {
+            "project": "Project Zenith",
+            "version": "1.0.0",
+            "status": "Running",
+            "description": "Space Situational Awareness & Disaster Intelligence Platform"
+        }
+
+    return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Zenith Backend - Project Explorer</title>
+    <!-- JetBrains Mono Font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-darker: #0d0d0d;
+            --bg-editor: #1e1e1e;
+            --bg-sidebar: #181818;
+            --bg-active: #2d2d2d;
+            --bg-hover: #2a2a2a;
+            --fg-default: #d4d4d4;
+            --fg-muted: #858585;
+            --yellow-folder: #e2b342;
+            --white-file: #f0f0f0;
+            --blue-accent: #007acc;
+            --blue-glow: #007acc55;
+            --text-font: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--text-font);
+            background-color: var(--bg-darker);
+            color: var(--fg-default);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Interactive Controls (Hidden during print) */
+        .controls {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-sidebar);
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .controls-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls-title::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #4fc1ff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #4fc1ff;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            font-family: var(--text-font);
+            font-size: 12px;
+            background-color: var(--bg-active);
+            color: #fff;
+            border: 1px solid #444;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--blue-accent);
+            border-color: var(--blue-accent);
+        }
+
+        button.active {
+            background-color: var(--blue-accent);
+            border-color: var(--blue-accent);
+        }
+
+        /* A4 Blueprint Sheet Wrapper */
+        .blueprint-container {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: var(--bg-editor);
+            border: 1px solid #2d2d2d;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Blueprint Layout Header */
+        .blueprint-header {
+            padding: 24px;
+            background-color: var(--bg-sidebar);
+            border-bottom: 2px solid #2d2d2d;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .project-meta {
+            max-width: 60%;
+        }
+
+        .project-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-tag {
+            font-size: 10px;
+            background-color: #3e3e3e;
+            color: #00e6ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .project-desc {
+            font-size: 11px;
+            color: var(--fg-muted);
+            line-height: 1.5;
+        }
+
+        .spec-meta {
+            text-align: right;
+            font-size: 10px;
+            color: var(--fg-muted);
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 4px 12px;
+            border-left: 1px solid #333;
+            padding-left: 20px;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #858585;
+        }
+
+        .spec-val {
+            color: #d4d4d4;
+            font-family: var(--text-font);
+        }
+
+        /* Main Workspace split: Sidebar and Code/Doc View */
+        .blueprint-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            background-color: var(--bg-editor);
+        }
+
+        /* VS Code Style Sidebar */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid #252526;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--fg-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #252526;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tree-container {
+            padding: 10px 4px;
+            overflow-y: auto;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Explorer Tree Styling */
+        .tree-node {
+            display: flex;
+            align-items: center;
+            height: 22px;
+            padding-left: calc(var(--depth) * 16px);
+            cursor: pointer;
+            position: relative;
+            color: var(--fg-default);
+            font-size: 11px;
+        }
+
+        .tree-node:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .tree-node.active {
+            background-color: var(--bg-active);
+            color: #fff;
+        }
+
+        /* Connectors and lines */
+        .tree-node::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: calc((var(--depth) - 1) * 16px + 8px);
+            width: 1px;
+            background-color: #2b2b2b;
+            display: var(--show-lines, block);
+        }
+
+        /* Node icon styling */
+        .node-icon {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .folder-icon {
+            color: var(--yellow-folder);
+        }
+
+        .file-icon {
+            color: var(--white-file);
+        }
+
+        .node-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Arrow indicator for folders */
+        .arrow {
+            width: 12px;
+            height: 12px;
+            margin-right: 2px;
+            color: var(--fg-muted);
+            transition: transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .arrow-empty {
+            width: 14px;
+        }
+
+        /* Specific Highlight rule for proprietary_apis folder */
+        .proprietary-glow {
+            background-color: rgba(0, 122, 204, 0.06);
+            border-left: 2px solid var(--blue-accent);
+            box-shadow: inset 0 0 10px rgba(0, 122, 204, 0.15), 0 0 8px rgba(0, 122, 204, 0.1);
+        }
+
+        .proprietary-glow .node-label {
+            color: #7dd3fc;
+            font-weight: 500;
+        }
+
+        .proprietary-badge {
+            font-size: 8px;
+            background-color: var(--blue-accent);
+            color: #ffffff;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-left: 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 6px var(--blue-glow);
+        }
+
+        /* Main Editor / Detail View */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-editor);
+            overflow: hidden;
+        }
+
+        .editor-tabs {
+            height: 35px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            border-bottom: 1px solid #252526;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+            border-right: 1px solid #252526;
+            cursor: pointer;
+            color: var(--fg-muted);
+            background-color: #1a1a1a;
+            font-size: 11px;
+        }
+
+        .tab.active {
+            background-color: var(--bg-editor);
+            color: #fff;
+            border-top: 1px solid var(--blue-accent);
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Syntax Highlighting for custom code */
+        pre {
+            font-family: var(--text-font);
+            font-size: 11px;
+            line-height: 1.5;
+            color: #d4d4d4;
+            white-space: pre-wrap;
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-comment { color: #6a9955; font-style: italic; }
+        .code-function { color: #dcdcaa; }
+        .code-class { color: #4ec9b0; }
+        .code-number { color: #b5cea8; }
+        .code-decorator { color: #dcdcaa; }
+
+        /* Blueprint details overlay / explanation panel */
+        .doc-panel {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid #2d2d2d;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .doc-title {
+            color: #4fc1ff;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .doc-body {
+            font-size: 11px;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .doc-body ul {
+            margin-left: 20px;
+            margin-top: 6px;
+        }
+
+        /* VS Code Status Bar (mimicked) */
+        .status-bar {
+            height: 22px;
+            background-color: #007acc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 10px;
+            color: #fff;
+        }
+
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* A4 Print Layout overrides */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+                margin: 0;
+            }
+
+            .controls {
+                display: none !important;
+            }
+
+            .blueprint-container {
+                box-shadow: none !important;
+                border: none !important;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+            }
+        }
+
+        /* Forced Print view mockup standard classes */
+        .forced-a4 {
+            width: 210mm !important;
+            height: 297mm !important;
+            min-height: 297mm !important;
+            max-height: 297mm !important;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .forced-a4 .tree-container {
+            overflow-y: hidden;
+        }
+        
+        .forced-a4 .editor-content {
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Controls Panel (hidden in print) -->
+    <div class="controls">
+        <div class="controls-title">Project Zenith - Interactive Blueprint Controls</div>
+        <div class="btn-group">
+            <button id="btn-collapse" onclick="collapseAll()">Collapse All</button>
+            <button id="btn-expand" class="active" onclick="expandAll()">Expand All</button>
+            <button id="btn-toggle-glow" class="active" onclick="toggleGlow()">Toggle Custom Accent</button>
+            <button id="btn-view" onclick="toggleViewMode()">Toggle Print Fit (A4 Ratio)</button>
+            <button onclick="window.print()" style="background-color: var(--blue-accent); font-weight: bold;">Export/Print PDF</button>
+        </div>
+    </div>
+
+    <!-- A4 Blueprint Sheet -->
+    <div class="blueprint-container forced-a4" id="blueprint">
+        
+        <!-- Header Section -->
+        <div class="blueprint-header">
+            <div class="project-meta">
+                <div class="project-title">
+                    PROJECT ZENITH BACKEND
+                    <span class="project-tag">ARCHITECTURAL BLUEPRINT</span>
+                </div>
+                <div class="project-desc">
+                    Orbit-scale spatial intelligence system. Real-time telemetry parsing, SGP4 orbital propagation, ML-driven debris collision prediction, and automated disaster score classification.
+                </div>
+            </div>
+            <div class="spec-meta">
+                <span class="spec-label">Environment:</span>
+                <span class="spec-val">Python 3.10+</span>
+                
+                <span class="spec-label">Architecture:</span>
+                <span class="spec-val">FastAPI Service-Layer</span>
+                
+                <span class="spec-label">Core Models:</span>
+                <span class="spec-val">XGBoost Classifier</span>
+                
+                <span class="spec-label">Datastores:</span>
+                <span class="spec-val">PostgreSQL / Redis</span>
+            </div>
+        </div>
+
+        <!-- Body Section -->
+        <div class="blueprint-body">
+            
+            <!-- Explorer Side Bar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <span>Explorer: Project Zenith</span>
+                    <span style="font-size: 9px; opacity: 0.7;">Expanded</span>
+                </div>
+                <div class="tree-container" id="file-tree">
+                    <!-- Tree Nodes will be generated here dynamically -->
+                </div>
+            </div>
+
+            <!-- Main Panel (Active file viewer & detailed annotations) -->
+            <div class="editor-container">
+                <div class="editor-tabs">
+                    <div class="tab active" id="active-tab">
+                        <span class="file-icon" style="color: #61dafb; font-weight: bold;">Py</span>
+                        <span id="tab-filename">orbital_prediction_api.py</span>
+                    </div>
+                </div>
+
+                <div class="editor-content">
+                    <div id="code-block-container">
+                        <!-- Code blocks will be swapped dynamically -->
+                        <pre id="code-content"></pre>
+                    </div>
+
+                    <!-- Custom Annotations Panel -->
+                    <div class="doc-panel">
+                        <div class="doc-title">
+                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" style="color: #00e6ff;">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0-1A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
+                                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0L7.1 4.995z"/>
+                            </svg>
+                            Zenith Architecture Note
+                        </div>
+                        <div class="doc-body" id="annotation-text">
+                            Select any file in the Explorer on the left to review its technical role, API dependencies, and custom implementation within the Zenith Spatial Analytics framework.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <div class="status-item" style="background-color: #005a9e; padding: 0 8px; height: 100%;">
+                    <span>WS: Zenith_Backend</span>
+                </div>
+                <div class="status-item">
+                    <span>git:</span> <span style="font-weight: bold;">main</span>
+                </div>
+                <div class="status-item">
+                    <span style="color: #55ff55;">●</span> <span>System Ready</span>
+                </div>
+            </div>
+            <div class="status-right">
+                <div class="status-item">
+                    <span>UTF-8</span>
+                </div>
+                <div class="status-item">
+                    <span>Python 3.10.8</span>
+                </div>
+                <div class="status-item" style="color: #ffca28;">
+                    <span>Proprietary APIs Active</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripting for Tree and Interactive view -->
+    <script>
+        // File Tree Data Model
+        const fileTreeData = {
+            name: "backend",
+            type: "folder",
+            open: true,
+            children: [
+                { name: "app.py", type: "file" },
+                { name: "config.py", type: "file" },
+                { name: "requirements.txt", type: "file" },
+                { name: ".env", type: "file" },
+                {
+                    name: "api",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "celestial.py", type: "file" },
+                        { name: "satellites.py", type: "file" },
+                        { name: "iss.py", type: "file" },
+                        { name: "disasters.py", type: "file" },
+                        { name: "isro.py", type: "file" },
+                        { name: "health.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "proprietary_apis",
+                    type: "folder",
+                    open: true,
+                    isProprietary: true,
+                    children: [
+                        { name: "hotspot_api.py", type: "file" },
+                        { name: "collision_api.py", type: "file" },
+                        { name: "congestion_api.py", type: "file" },
+                        { name: "visibility_api.py", type: "file" },
+                        { name: "orbital_prediction_api.py", type: "file", defaultSelected: true },
+                        { name: "satellite_risk_api.py", type: "file" },
+                        { name: "disaster_score_api.py", type: "file" },
+                        { name: "coverage_api.py", type: "file" },
+                        { name: "anomaly_api.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "services",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "celestial_service.py", type: "file" },
+                        { name: "satellite_service.py", type: "file" },
+                        { name: "disaster_service.py", type: "file" },
+                        { name: "orbit_service.py", type: "file" },
+                        { name: "hotspot_service.py", type: "file" },
+                        { name: "analytics_service.py", type: "file" },
+                        { name: "ai_service.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "ml",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        {
+                            name: "collision",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "anomaly",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "hotspot",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "disaster",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "satellite_risk",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "congestion",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "train.py", type: "file" },
+                                { name: "predict.py", type: "file" },
+                                { name: "features.py", type: "file" },
+                                { name: "dataset.csv", type: "file" },
+                                { name: "model.pkl", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "transformer",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "mission_assistant.py", type: "file" },
+                                {
+                                    name: "model",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "config.json", type: "file" },
+                                        { name: "tokenizer.json", type: "file" },
+                                        { name: "tokenizer_config.json", type: "file" },
+                                        { name: "special_tokens_map.json", type: "file" },
+                                        { name: "generation_config.json", type: "file" },
+                                        { name: "model.safetensors", type: "file" },
+                                        { name: "README.md", type: "file" }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "preprocessing",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "dataset_loader.py", type: "file" },
+                                { name: "feature_engineering.py", type: "file" },
+                                { name: "scaler.py", type: "file" },
+                                { name: "encoder.py", type: "file" },
+                                { name: "cleaning.py", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "evaluation",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "metrics.py", type: "file" },
+                                { name: "validation.py", type: "file" },
+                                { name: "roc_curve.py", type: "file" },
+                                { name: "confusion_matrix.py", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "utils",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "constants.py", type: "file" },
+                                { name: "logger.py", type: "file" },
+                                { name: "model_loader.py", type: "file" },
+                                { name: "save_model.py", type: "file" }
+                            ]
+                        },
+                        { name: "__init__.py", type: "file" },
+                        { name: "README.md", type: "file" }
+                    ]
+                },
+                {
+                    name: "data",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        {
+                            name: "raw",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                {
+                                    name: "nasa_horizons",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "horizons_ephemeris.csv", type: "file" }
+                                    ]
+                                },
+                                {
+                                    name: "celestrak",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "active_satellites.tle", type: "file" },
+                                        { name: "satellite_dataset.csv", type: "file" },
+                                        { name: "current_catalog.csv", type: "file" },
+                                        { name: "starlink_astros_pass.csv", type: "file" }
+                                    ]
+                                },
+                                {
+                                    name: "opennotify",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "iss_location.json", type: "file" },
+                                        { name: "astros.json", type: "file" }
+                                    ]
+                                },
+                                {
+                                    name: "isro_bhuvan",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "drought_risk.csv", type: "file" },
+                                        { name: "flood_risk.csv", type: "file" },
+                                        { name: "earthquake_risk.csv", type: "file" }
+                                    ]
+                                },
+                                {
+                                    name: "mosdac",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "cyclone_track.csv", type: "file" },
+                                        { name: "wildfire_hotspots.csv", type: "file" }
+                                    ]
+                                },
+                                {
+                                    name: "nasa_eonet",
+                                    type: "folder",
+                                    open: true,
+                                    children: [
+                                        { name: "eonet_events.json", type: "file" }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "processed",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "hotspot_data.csv", type: "file" },
+                                { name: "collision_features.csv", type: "file" },
+                                { name: "orbital_density.csv", type: "file" },
+                                { name: "disaster_scores.csv", type: "file" },
+                                { name: "satellite_visibility.csv", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "cache",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "satellites.json", type: "file" },
+                                { name: "disasters.json", type: "file" },
+                                { name: "celestial_objects.json", type: "file" },
+                                { name: "visibility_cache.json", type: "file" }
+                            ]
+                        },
+                        {
+                            name: "exports",
+                            type: "folder",
+                            open: true,
+                            children: [
+                                { name: "hotspot_maps.geojson", type: "file" },
+                                { name: "orbital_heatmaps.geojson", type: "file" },
+                                { name: "analytics_reports.json", type: "file" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "analytics",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "orbital_analysis.py", type: "file" },
+                        { name: "congestion_analysis.py", type: "file" },
+                        { name: "hotspot_generation.py", type: "file" },
+                        { name: "trajectory_analysis.py", type: "file" },
+                        { name: "disaster_analysis.py", type: "file" },
+                        { name: "national_asset_analysis.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "database",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "postgres.py", type: "file" },
+                        { name: "redis_cache.py", type: "file" },
+                        { name: "models.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "routes",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "celestial_routes.py", type: "file" },
+                        { name: "satellite_routes.py", type: "file" },
+                        { name: "disaster_routes.py", type: "file" },
+                        { name: "proprietary_routes.py", type: "file" },
+                        { name: "ai_routes.py", type: "file" },
+                        { name: "health_routes.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "scheduler",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "update_tle.py", type: "file" },
+                        { name: "fetch_disasters.py", type: "file" },
+                        { name: "refresh_cache.py", type: "file" },
+                        { name: "retrain_models.py", type: "file" }
+                    ]
+                },
+                {
+                    name: "utils",
+                    type: "folder",
+                    open: true,
+                    children: [
+                        { name: "skyfield_utils.py", type: "file" },
+                        { name: "tle_parser.py", type: "file" },
+                        { name: "geo_utils.py", type: "file" },
+                        { name: "validators.py", type: "file" },
+                        { name: "logger.py", type: "file" }
+                    ]
+                },
+                { name: "README.md", type: "file" }
+            ]
+        };
+
+        // File Content Definitions (Simulated Database)
+        const fileContents = {
+            "orbital_prediction_api.py": {
+                annotation: "The <b>orbital_prediction_api.py</b> serves as a core proprietary gateway. It utilizes celestial models (SGP4 and Skyfield) to forecast high-accuracy coordinate paths. This calculation is heavily compute-intensive and runs predictions for space-debris conjunction mitigation.",
+                code: `<span class="code-comment"># Project Zenith Proprietary API - Confidential</span>
+<span class="code-comment"># Orbital Prediction Service (Proprietary Engine)</span>
+<span class="code-comment"># Computes high-precision future trajectories using Skyfield and SGP4.</span>
+
+<span class="code-keyword">import</span> time
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Dict, List, Any
+<span class="code-keyword">from</span> utils.skyfield_utils <span class="code-keyword">import</span> SkyfieldManager
+<span class="code-keyword">from</span> database.redis_cache <span class="code-keyword">import</span> CacheManager
+
+<span class="code-keyword">class</span> <span class="code-class">OrbitalPredictionAPI</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self, satellite_id: str):
+        self.satellite_id = satellite_id
+        self.cache = CacheManager()
+        self.skyfield = SkyfieldManager()
+
+    <span class="code-keyword">def</span> <span class="code-function">calculate_ephemeris</span>(self, duration_hours: int = <span class="code-number">24</span>) -> List[Dict[str, Any]]:
+        tle = self.cache.get_tle(self.satellite_id)
+        <span class="code-keyword">if</span> <span class="code-keyword">not</span> tle:
+            <span class="code-keyword">raise</span> <span class="code-class">ValueError</span>(<span class="code-string">"Satellite coordinates missing from Redis cache"</span>)
+        
+        satellite = self.skyfield.load_tle(tle)
+        <span class="code-comment"># Vectorized SGP4 propagation over duration timespan</span>
+        trajectory = self.skyfield.propagate(satellite, duration_hours)
+        <span class="code-keyword">return</span> trajectory`
+            },
+            "app.py": {
+                annotation: "<b>app.py</b> is the primary entrypoint for the FastAPI application. It wires together CORS headers, API routers for core services, custom proprietary modules, logging systems, and startup/shutdown lifecycle hooks.",
+                code: `<span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> FastAPI
+<span class="code-keyword">from</span> fastapi.middleware.cors <span class="code-keyword">import</span> CORSMiddleware
+<span class="code-keyword">from</span> routes <span class="code-keyword">import</span> proprietary_routes, satellite_routes, ai_routes
+<span class="code-keyword">from</span> utils.logger <span class="code-keyword">import</span> setup_logger
+
+logger = setup_logger(<span class="code-string">"zenith_core"</span>)
+
+app = FastAPI(
+    title=<span class="code-string">"Project Zenith Backend"</span>,
+    description=<span class="code-string">"Orbit-Scale Spatial Analytics & Safety Engine"</span>,
+    version=<span class="code-string">"1.0.0"</span>
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="code-string">"*"</span>],
+    allow_credentials=<span class="code-style">True</span>,
+    allow_methods=[<span class="code-string">"*"</span>],
+    allow_headers=[<span class="code-string">"*"</span>],
+)
+
+app.include_router(satellite_routes.router, prefix=<span class="code-string">"/api/satellites"</span>)
+app.include_router(proprietary_routes.router, prefix=<span class="code-string">"/api/proprietary"</span>)
+app.include_router(ai_routes.router, prefix=<span class="code-string">"/api/ai"</span>)
+
+<span class="code-decorator">@app.on_event</span>(<span class="code-string">"startup"</span>)
+<span class="code-keyword">async def</span> <span class="code-function">startup_event</span>():
+    logger.info(<span class="code-string">"Initializing cache matrices and loading ML weights..."</span>)`
+            },
+            "collision_predictor.py": {
+                annotation: "The machine learning file <b>collision_predictor.py</b> loads the XGBoost classification model. It runs statistical probability predictions on proximity events (distance, trajectory intersection, relative velocities) to alert operators.",
+                code: `<span class="code-keyword">import</span> joblib
+<span class="code-keyword">import</span> numpy <span class="code-keyword">import</span> np
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Tuple, Dict, Any
+
+<span class="code-keyword">class</span> <span class="code-class">CollisionPredictor</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self, model_path: str = <span class="code-string">"ml/xgboost_model.pkl"</span>):
+        self.model = joblib.load(model_path)
+        
+    <span class="code-keyword">def</span> <span class="code-function">predict_risk</span>(
+        self, 
+        vector_a: Tuple[float, float, float], 
+        vector_b: Tuple[float, float, float]
+    ) -> Dict[str, Any]:
+        dist = np.linalg.norm(np.array(vector_a) - np.array(vector_b))
+        features = np.array([[dist, dist * <span class="code-number">0.92</span>]])
+        
+        prob = self.model.predict_proba(features)[<span class="code-number">0</span>][<span class="code-number">1</span>]
+        <span class="code-keyword">return</span> {
+            <span class="code-string">"distance_m"</span>: dist * <span class="code-number">1000</span>,
+            <span class="code-string">"probability"</span>: float(prob),
+            <span class="code-string">"critical"</span>: prob > <span class="code-number">0.75</span>
+        }`
+            },
+            "README.md": {
+                annotation: "<b>README.md</b> describes the technical scope, deployment guidelines, key components, and pipeline structure for Project Zenith Backend. It provides developers an instant architecture summary.",
+                code: `<span class="code-comment"># Project Zenith Backend</span>
+
+Orbit-Scale Spatial Analytics & Safety Engine.
+
+<span class="code-keyword">## Key Core Modules</span>
+- <span class="code-string">/api</span> - Telemetry ingress pathways.
+- <span class="code-string">/proprietary_apis</span> - Zenith-developed high fidelity math models.
+- <span class="code-string">/services</span> - Compute orchestrators.
+- <span class="code-string">/ml</span> - XGBoost & regression analytics models.
+- <span class="code-string">/scheduler</span> - Auto-TLE and API polling agents.
+
+<span class="code-keyword">## Tech Infrastructure</span>
+- Python FastAPI, Skyfield, SGP4
+- PostgreSQL & Redis Cache
+- Scikit-Learn Inference Frameworks`
+            }
+        };
+
+        // UI State Variables
+        let isGlowEnabled = true;
+        let showLines = true;
+        let selectedNodeElement = null;
+
+        // Recursive tree rendering function
+        function renderTree(node, depth = 0, parentElement = null) {
+            const container = document.createElement('div');
+            container.style.display = node.open === false ? 'none' : 'block';
+            
+            // Build the current node row
+            const nodeRow = document.createElement('div');
+            nodeRow.className = 'tree-node';
+            nodeRow.style.setProperty('--depth', depth);
+            
+            // Highlight proprietary_apis
+            if (node.isProprietary && isGlowEnabled) {
+                nodeRow.classList.add('proprietary-glow');
+            }
+
+            // Arrow element for folders
+            const arrow = document.createElement('span');
+            arrow.className = 'arrow';
+            if (node.type === 'folder') {
+                arrow.innerHTML = '▼';
+                if (!node.open) {
+                    arrow.classList.add('collapsed');
+                }
+            } else {
+                arrow.innerHTML = '';
+                arrow.className = 'arrow-empty';
+            }
+            nodeRow.appendChild(arrow);
+
+            // Icon element
+            const icon = document.createElement('span');
+            icon.className = 'node-icon';
+            if (node.type === 'folder') {
+                icon.classList.add('folder-icon');
+                icon.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 0 9.62 3.25H14A1.5 1.5 0 0 1 15.5 4.75v8.5A1.5 1.5 0 0 1 14 14.75H2.5A1.5 1.5 0 0 1 1 13.25V2.5z"/>
+                </svg>`;
+            } else {
+                icon.classList.add('file-icon');
+                icon.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 1.75C4 .784 4.784 0 5.75 0h5.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 14.25 16h-8.5A1.75 1.75 0 0 1 4 14.25V1.75zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25V5.5h-2.75A1.75 1.75 0 0 1 10 3.75V1.5H5.75z"/>
+                </svg>`;
+            }
+            nodeRow.appendChild(icon);
+
+            // Label text
+            const label = document.createElement('span');
+            label.className = 'node-label';
+            label.textContent = node.name;
+            
+            // Add proprietary tag inside if applicable
+            if (node.isProprietary) {
+                const badge = document.createElement('span');
+                badge.className = 'proprietary-badge';
+                badge.textContent = 'PROPRIETARY';
+                label.appendChild(badge);
+            }
+            nodeRow.appendChild(label);
+
+            // Event handler for toggling folder or selecting file
+            nodeRow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // Remove previous active state
+                if (selectedNodeElement) {
+                    selectedNodeElement.classList.remove('active');
+                }
+                nodeRow.classList.add('active');
+                selectedNodeElement = nodeRow;
+
+                if (node.type === 'folder') {
+                    node.open = !node.open;
+                    arrow.classList.toggle('collapsed', !node.open);
+                    
+                    // Toggle visibility of children container
+                    const childrenDiv = nodeRow.nextElementSibling;
+                    if (childrenDiv) {
+                        childrenDiv.style.display = node.open ? 'block' : 'none';
+                    }
+                } else {
+                    // Update editor view with current file details
+                    loadDoc(node.name);
+                }
+            });
+
+            container.appendChild(nodeRow);
+
+            // Render children recursively
+            if (node.children && node.children.length > 0) {
+                const childrenContainer = document.createElement('div');
+                childrenContainer.style.display = node.open ? 'block' : 'none';
+                
+                node.children.forEach(child => {
+                    renderTree(child, depth + 1, childrenContainer);
+                });
+                container.appendChild(childrenContainer);
+            }
+
+            if (parentElement) {
+                parentElement.appendChild(container);
+            } else {
+                document.getElementById('file-tree').appendChild(container);
+            }
+
+            // Set default selected item
+            if (node.defaultSelected) {
+                nodeRow.classList.add('active');
+                selectedNodeElement = nodeRow;
+                loadDoc(node.name);
+            }
+        }
+
+        // Collapse All Folders
+        function collapseAll() {
+            document.getElementById('btn-collapse').classList.add('active');
+            document.getElementById('btn-expand').classList.remove('active');
+            
+            const collapseNode = (node) => {
+                if (node.type === 'folder' && node.name !== "backend") {
+                    node.open = false;
+                }
+                if (node.children) node.children.forEach(collapseNode);
+            };
+            
+            collapseNode(fileTreeData);
+            refreshTree();
+        }
+
+        // Expand All Folders
+        function expandAll() {
+            document.getElementById('btn-expand').classList.add('active');
+            document.getElementById('btn-collapse').classList.remove('active');
+
+            const expandNode = (node) => {
+                if (node.type === 'folder') {
+                    node.open = true;
+                }
+                if (node.children) node.children.forEach(expandNode);
+            };
+            
+            expandNode(fileTreeData);
+            refreshTree();
+        }
+
+        // Toggle Glow highlight
+        function toggleGlow() {
+            isGlowEnabled = !isGlowEnabled;
+            document.getElementById('btn-toggle-glow').classList.toggle('active', isGlowEnabled);
+            refreshTree();
+        }
+
+        // Redraw Tree
+        function refreshTree() {
+            const treeRoot = document.getElementById('file-tree');
+            treeRoot.innerHTML = '';
+            renderTree(fileTreeData);
+        }
+
+        // Toggle blueprint print scaling view
+        function toggleViewMode() {
+            const container = document.getElementById('blueprint');
+            const btn = document.getElementById('btn-view');
+            container.classList.toggle('forced-a4');
+            btn.classList.toggle('active');
+        }
+
+        // Populate doc viewer
+        function loadDoc(filename) {
+            const tabFilename = document.getElementById('tab-filename');
+            const codeContent = document.getElementById('code-content');
+            const annotationText = document.getElementById('annotation-text');
+            
+            tabFilename.textContent = filename;
+            
+            // Load file content or placeholder
+            if (fileContents[filename]) {
+                codeContent.innerHTML = fileContents[filename].code;
+                annotationText.innerHTML = fileContents[filename].annotation;
+            } else {
+                // Generate a smart placeholder
+                const isPy = filename.endsWith('.py');
+                const isPkl = filename.endsWith('.pkl');
+                const isEnv = filename.startsWith('.');
+                
+                let commentChar = isPy ? '#' : (isEnv ? '#' : '//');
+                let codeStr = `<span class="code-comment">${commentChar} Project Zenith Module: ${filename}</span>\n`;
+                
+                if (isPy) {
+                    codeStr += `<span class="code-keyword">import</span> os\n<span class="code-keyword">from</span> utils.logger <span class="code-keyword">import</span> setup_logger\n\nlogger = setup_logger(<span class="code-string">"${filename.replace('.py', '')}"</span>)\n\n<span class="code-keyword">def</span> <span class="code-function">execute</span>():\n    logger.debug(<span class="code-string">"Executing standard Zenith tracking pipelines."</span>)\n    <span class="code-keyword">return</span> <span class="code-style">True</span>`;
+                } else if (isPkl) {
+                    codeStr += `<span class="code-comment">[Binary Model weights data stream]</span>\n<span class="code-comment">Format: Joblib serialized Python Object.</span>`;
+                } else {
+                    codeStr += `PORT=<span class="code-number">8000</span>\nREDIS_HOST=<span class="code-string">"localhost"</span>\nREDIS_PORT=<span class="code-number">6379</span>`;
+                }
+                
+                codeContent.innerHTML = codeStr;
+                annotationText.innerHTML = `This file is part of the <b>Project Zenith Backend</b> directory. It operates in conjunction with database schemas and services to enable analytics of orbits.`;
+            }
+        }
+
+        // Initial setup
+        window.onload = () => {
+            renderTree(fileTreeData);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+    "generated_at": "2026-06-26T06:18:39.413611+00:00",
+    "locations": {
+        "bengaluru": {
+            "name": "Bengaluru (ISRO HQ)",
+            "latitude": 12.9716,
+            "longitude": 77.5946,
+            "temperature_c": 28.1,
+            "wind_speed_kmh": 17.6,
+            "weather_code": 53,
+            "time": "2026-06-26T06:15",
+            "status": "online"
+        },
+        "chennai": {
+            "name": "Chennai (SDSC Shar Nearby)",
+            "latitude": 13.0827,
+            "longitude": 80.2707,
+            "temperature_c": 36.1,
+            "wind_speed_kmh": 11.0,
+            "weather_code": 3,
+            "time": "2026-06-26T06:15",
+            "status": "online"
+        },
+        "new_delhi": {
+            "name": "New Delhi (Northern Regional Centre)",
+            "latitude": 28.6139,
+            "longitude": 77.209,
+            "temperature_c": 39.4,
+            "wind_speed_kmh": 6.1,
+            "weather_code": 0,
+            "time": "2026-06-26T06:15",
+            "status": "online"
+        }
+    }
+}
