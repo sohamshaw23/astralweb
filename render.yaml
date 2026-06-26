@@ -23,8 +23,7 @@ services:
     name: zenith-frontend
     runtime: static
     buildCommand: npm install && npm run build
-    staticPublishPath: out
-    plan: static
+    staticPublishPath: out    
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://zenith-backend-api.onrender.com
