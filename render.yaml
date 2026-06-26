@@ -33,5 +33,5 @@ databases:
   # 3. Managed PostgreSQL Database
   - name: zenith-db
     databaseName: project_zenith
-    user: postgres
+    user: zenith_user
     plan: free
